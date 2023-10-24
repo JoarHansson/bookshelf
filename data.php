@@ -56,6 +56,16 @@ $books = [
   ["title" => "Legends of the Golden Phoenix", "author" => "Yuki Nakamura"],
   ["title" => "The Enchanted Jade Garden", "author" => "Chen Wei"],
   ["title" => "Echoes from the Red Pagoda", "author" => "Sofia Martinez"],
+  // ["title" => "The Mysteries of Tibet", "author" => "Tenzin Dorje"],
+  // ["title" => "The Lost Secrets of Atlantis", "author" => "Elena Kuznetsova"],
+  // ["title" => "Whispers from the Enchanted Forest", "author" => "Oliver Smith"],
+  // ["title" => "The Lunar Conspiracy", "author" => "Mia Johnson"],
+  // ["title" => "Chronicles of the Celestial Empire", "author" => "Liu Wei"],
+  // ["title" => "Secrets of the Amazon Rainforest", "author" => "Isabella Silva"],
+  // ["title" => "The Alchemist's Legacy", "author" => "Antonio Rodriguez"],
+  // ["title" => "Legends of the Eternal Guardians", "author" => "Gabriela Lopez"],
+  // ["title" => "The Mystery of the Whispering Oak", "author" => "Ciaran O'Sullivan"],
+  // ["title" => "The Enchanted Amulet", "author" => "Jamilah Abidi"],
 ];
 
 $genres = [
@@ -72,25 +82,24 @@ $genres = [
 ];
 
 $colors = [
-  "Red",
-  "Blue",
-  "Green",
-  "Yellow",
-  "Purple",
-  "Orange",
-  "Pink",
-  "Teal",
-  "Brown",
-  "Gray",
+  "#3498db", // Blue
+  "#e74c3c", // Red
+  "#2ecc71", // Green
+  "#f1c40f", // Yellow
+  "#9b59b6", // Purple
+  "#e67e22", // Orange
+  "#fd79a8", // Pink
+  "#1abc9c", // Teal
 ];
 
 // populate $books with more data
 foreach ($books as $key => $book) {
-  $books[$key]["test"] = "test";
   $books[$key]["id"] = $key;
   $books[$key]["genre"] = $genres[rand(0, 9)];
-  $books[$key]["color"] = $colors[rand(0, 9)];
+  $books[$key]["color"] = $colors[rand(0, 7)];
+  $books[$key]["year"] = rand(1800, 2023);
+  $books[$key]["pages"] = rand(100, 300);
 }
 
-echo "<pre>";
-print_r($books);
+// echo "<pre>";
+// var_export($books);
