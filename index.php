@@ -3,9 +3,11 @@
 declare(strict_types=1);
 
 require __DIR__ . "/header.php";
-require __DIR__ . "/data.php";
+// require __DIR__ . "/data-source.php";
+require __DIR__ . "/data-generated.php";
 
-// sort book based on form input:
+
+// sort books based on form input:
 if (isset($_GET["sort"], $_GET["ascOrDesc"])) {
   $sortBy = htmlspecialchars($_GET["sort"]);
   $sortAscOrDesc = htmlspecialchars($_GET["ascOrDesc"]);
@@ -36,77 +38,83 @@ if (isset($_GET["filterBy"])) {
 
 ?>
 
-<div class="bookshelf">
-  <form action="index.php" method="get" class="form-bookshelf">
-    <?php foreach ($books as $book) : ?>
-      <?php foreach ($filteredBooks as $filteredBook) :
-        if ($filteredBook == $book) : ?>
+<main>
+  <section class="info-section">
+    <!-- Display the selected book: -->
+    <div class="selection">
+      <?php if (isset($_GET["id"])) :
+        $selectedBook = $_GET["id"]; ?>
+        <p>Title: <?= $books[$selectedBook]["title"]; ?></p>
+        <p>Author: <?= $books[$selectedBook]["author"]; ?></p>
+        <p>Genre: <?= $books[$selectedBook]["genre"]; ?></p>
+        <p>Release year: <?= $books[$selectedBook]["year"]; ?></p>
+        <p>Number of pages: <?= $books[$selectedBook]["pages"]; ?></p>
+      <?php else : ?>
+        <p>Do one of the following:</p>
+        <ul>
+          <li>Pick a book</li>
+          <li>Sort the books</li>
+          <li>Search for a book</li>
+        </ul>
+      <?php endif; ?>
+    </div>
 
-          <!-- Each book is a button and can be selected: -->
-          <button type="submit" value="<?= $book["id"] ?>" name="id" class="book" style="
+    <div class="sort-and-filter">
+      <!-- select which parameter to sort by alphabetically. ASC or DESC.
+      Color currently sorts by hex value... not ideal, might fix later. -->
+      <div class="sort">
+        <form action="index.php" method="get">
+          <label for="sort">Sort by:</label><br>
+          <select id="sort" name="sort">
+            <option value="title" selected>Title</option>
+            <option value="author">Author</option>
+            <option value="pages">Pages</option>
+            <option value="year">Release year</option>
+            <option value="color">Color of book</option>
+          </select>
+          <button type="submit" value="asc" name="ascOrDesc">Asc</button>
+          <button type="submit" value="desc" name="ascOrDesc">Desc</button>
+        </form>
+      </div>
+
+
+      <!-- Search and filter by title or author: -->
+      <div class="filter">
+        <form action="index.php" method="get">
+          <label for="filterBy">Search title or author:</label><br>
+          <input type="text" name="filterBy">
+          <button type="submit">OK</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="bookshelf">
+    <form action="index.php" method="get" class="form-bookshelf">
+      <?php foreach ($books as $book) : ?>
+        <?php foreach ($filteredBooks as $filteredBook) :
+          if ($filteredBook == $book) : ?>
+
+            <!-- Each book is a button and can be selected: -->
+            <button type="submit" value="<?= $book["id"] ?>" name="id" class="book" style="
             background-color: <?= $book["color"] ?>;
+            font-family: <?= $book["fonts"] ?> , sans-serif;
             width: <?= $book["pages"] / 4 ?>px;">
-            <p><?= $book["title"] ?></p>
-            <p><?= $book["author"] ?></p>
-          </button>
+              <p><?= $book["title"] ?></p>
+              <p><?= $book["author"] ?></p>
+            </button>
 
-        <?php endif; ?>
-      <?php endforeach; ?>
-    <?php endforeach ?>
-
-  </form>
-  <div class="legs">
-    <div class="leg"></div>
-    <div class="leg"></div>
-    <div class="leg"></div>
-  </div>
-</div>
-
-<!-- Display the selected book: -->
-<div class="selection">
-  <?php if (isset($_GET["id"])) :
-    $selectedBook = $_GET["id"]; ?>
-    <p>Title: <?= $books[$selectedBook]["title"]; ?></p>
-    <p>Author: <?= $books[$selectedBook]["author"]; ?></p>
-    <p>Genre: <?= $books[$selectedBook]["genre"]; ?></p>
-    <p>Release year: <?= $books[$selectedBook]["year"]; ?></p>
-    <p>Number of pages: <?= $books[$selectedBook]["pages"]; ?></p>
-  <?php endif; ?>
-</div>
-
-<!-- select which parameter to sort by alphabetically. ASC or DESC.
-  Color currently sorts by hex value... not ideal, might fix later. -->
-<div class="sort">
-  <form action="index.php" method="get">
-    <label for="sort">sort by:</label>
-    <select id="sort" name="sort">
-      <option value="title" selected>Title</option>
-      <option value="author">Author</option>
-      <option value="pages">Pages</option>
-      <option value="year">Release year</option>
-      <option value="color">Color of book</option>
-    </select>
-    <button type="submit" value="asc" name="ascOrDesc">Asc</button>
-    <button type="submit" value="desc" name="ascOrDesc">Desc</button>
-  </form>
-</div>
-<br><br>
-
-<div class="filter">
-  <form action="index.php" method="get">
-    <label for="filterBy">Search book:</label>
-    <input type="text" name="filterBy">
-    <br>
-    <button type="submit">OK</button>
-  </form>
-</div>
-
-
+          <?php endif; ?>
+        <?php endforeach; ?>
+      <?php endforeach ?>
+    </form>
+  </section>
+</main>
 
 <?php
 
-echo "<pre>";
-var_export($books);
+// echo "<pre>";
+// var_export($books);
 ?>
 
 </body>
