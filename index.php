@@ -9,7 +9,7 @@ require __DIR__ . "/data-generated.php";
 
 // sort books based on form input:
 if (isset($_GET["sort"], $_GET["ascOrDesc"])) {
-  $sortBy = htmlspecialchars($_GET["sort"]);
+  $sortBy = htmlspecialchars($_GET["sort"]); // ex. pages or author
   $sortAscOrDesc = htmlspecialchars($_GET["ascOrDesc"]);
 }
 
@@ -33,24 +33,27 @@ if (isset($_GET["filterBy"])) {
       return 1;
     }
   });
-  // var_export($filteredBooks);
 }
 
 ?>
 
 <main>
+
+  <h1>Bookshelf</h1>
+
   <section class="info-section">
     <!-- Display the selected book: -->
     <div class="selection">
       <?php if (isset($_GET["id"])) :
         $selectedBook = $_GET["id"]; ?>
-        <p>Title: <?= $books[$selectedBook]["title"]; ?></p>
-        <p>Author: <?= $books[$selectedBook]["author"]; ?></p>
-        <p>Genre: <?= $books[$selectedBook]["genre"]; ?></p>
-        <p>Release year: <?= $books[$selectedBook]["year"]; ?></p>
-        <p>Number of pages: <?= $books[$selectedBook]["pages"]; ?></p>
+        <p><strong>Chosen book:</strong></p>
+        <p><strong>Title:</strong> <?= $books[$selectedBook]["title"]; ?></p>
+        <p><strong>Author:</strong> <?= $books[$selectedBook]["author"]; ?></p>
+        <p><strong>Genre:</strong> <?= $books[$selectedBook]["genre"]; ?></p>
+        <p><strong>Release year:</strong> <?= $books[$selectedBook]["year"]; ?></p>
+        <p><strong>Number of pages:</strong> <?= $books[$selectedBook]["pages"]; ?></p>
       <?php else : ?>
-        <p>Do one of the following:</p>
+        <p><strong>Do one of the following:</strong></p>
         <ul>
           <li>Pick a book</li>
           <li>Sort the books</li>
@@ -60,11 +63,13 @@ if (isset($_GET["filterBy"])) {
     </div>
 
     <div class="sort-and-filter">
+
       <!-- select which parameter to sort by alphabetically. ASC or DESC.
       Color currently sorts by hex value... not ideal, might fix later. -->
       <div class="sort">
         <form action="index.php" method="get">
-          <label for="sort">Sort by:</label><br>
+          <label for="sort"><strong>Sort by:</strong></label><br>
+          <!-- <div class="flex-container"> -->
           <select id="sort" name="sort">
             <option value="title" selected>Title</option>
             <option value="author">Author</option>
@@ -72,8 +77,11 @@ if (isset($_GET["filterBy"])) {
             <option value="year">Release year</option>
             <option value="color">Color of book</option>
           </select>
-          <button type="submit" value="asc" name="ascOrDesc">Asc</button>
-          <button type="submit" value="desc" name="ascOrDesc">Desc</button>
+          <div class="buttons-asc-desc">
+            <button type="submit" value="asc" name="ascOrDesc">ASC</button>
+            <button type="submit" value="desc" name="ascOrDesc">DESC</button>
+          </div>
+          <!-- </div> -->
         </form>
       </div>
 
@@ -81,9 +89,9 @@ if (isset($_GET["filterBy"])) {
       <!-- Search and filter by title or author: -->
       <div class="filter">
         <form action="index.php" method="get">
-          <label for="filterBy">Search title or author:</label><br>
+          <label for="filterBy"><strong>Search title or author:</strong></label><br>
           <input type="text" name="filterBy">
-          <button type="submit">OK</button>
+          <div class="button-filter"><button type="submit">OK</button></div>
         </form>
       </div>
     </div>
@@ -110,12 +118,6 @@ if (isset($_GET["filterBy"])) {
     </form>
   </section>
 </main>
-
-<?php
-
-// echo "<pre>";
-// var_export($books);
-?>
 
 </body>
 

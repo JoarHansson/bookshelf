@@ -6,13 +6,14 @@
   --book-purple: #9b59b6;
   --book-orange: #e67e22;
   --font-almost-black: #222222;
-  --bg-color: #dddddd;
-  --bg-shelves: #969696;
+  --bg-color: #e7e7e7;
+  --bg-shelves: #a5a5a5;
   --shelves: #303030;
 }
 
 * {
   box-sizing: border-box;
+  color: var(--font-almost-black);
 }
 
 body {
@@ -26,18 +27,73 @@ main {
   margin: 0 auto;
 }
 
+h1 {
+  text-align: center;
+  font-size: 4rem;
+  font-family: lora, serif;
+}
+
 .info-section {
   width: 100%;
   margin: 0;
   display: flex;
   justify-content: space-between;
+  font-family: Rubik, sans-serif;
+  line-height: 150%;
+}
+
+.info-section p {
+  margin: 0;
+}
+
+.selection {
+  margin-bottom: 20px;
+  margin-top: auto;
+}
+
+.sort-and-filter {
+  margin-top: auto;
+  width: 200px;
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+.sort select,
+.filter input {
+  width: 100%;
+  font-family: inherit;
+  border: 1px solid var(--font-almost-black);
+  box-shadow: 2px 2px 0 0 var(--font-almost-black);
+  background-color: white;
+}
+
+.sort .buttons-asc-desc,
+.filter .button-filter {
+  margin: 10px 0 20px 0;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.buttons-asc-desc button,
+.button-filter button {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  border: 1px solid var(--font-almost-black);
+  box-shadow: 2px 2px 0 0 var(--font-almost-black);
+}
+
+button:hover {
+  opacity: 0.8;
 }
 
 /* Bookshelf: */
-
 form.form-bookshelf {
   width: 100%;
-  margin: 20px 0 0 0;
+  margin: 40px 0 0 0;
   border: 20px var(--shelves) solid;
   border-bottom: 0;
   overflow: hidden;
@@ -47,8 +103,6 @@ form.form-bookshelf {
     var(--shelves) 230px
   );
   background-size: 10px 230px;
-  box-shadow: 0 0 8px 0px var(--font-almost-black);
-  /* box-shadow: 8px 8px 0 0 var(--font-almost-black); */
 }
 
 .book {
@@ -59,8 +113,7 @@ form.form-bookshelf {
   flex-direction: row-reverse;
   align-items: flex-start;
   justify-content: center;
-  border: 2px solid var(--font-almost-black);
-  /* box-shadow: inset 0 0 2px 0 var(--font-almost-black); */
+  border: 1px solid var(--shelves);
   float: left;
 }
 
@@ -69,5 +122,4 @@ form.form-bookshelf {
   writing-mode: vertical-rl;
   margin: 0;
   font-weight: 500;
-  color: var(--font-almost-black);
 }
