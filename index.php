@@ -45,7 +45,7 @@ if (isset($_GET["filterBy"])) {
     <!-- Display the selected book: -->
     <div class="selection">
       <?php if (isset($_GET["id"])) :
-        $selectedBook = $_GET["id"]; ?>
+        $selectedBook = htmlspecialchars($_GET["id"]); ?>
         <p><strong>Chosen book:</strong></p>
         <p><strong>Title:</strong> <?= $books[$selectedBook]["title"]; ?></p>
         <p><strong>Author:</strong> <?= $books[$selectedBook]["author"]; ?></p>
