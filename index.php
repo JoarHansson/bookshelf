@@ -8,19 +8,20 @@ require __DIR__ . "/data-generated.php";
 
 
 // sort books based on form input:
-if (isset($_GET["sort"], $_GET["ascOrDesc"])) {
+if (isset($_GET["sort"], $_GET["sortOrder"])) {
   $sortBy = htmlspecialchars($_GET["sort"]); // ex. pages or author
-  $sortAscOrDesc = htmlspecialchars($_GET["ascOrDesc"]);
+  $sortOrder = htmlspecialchars($_GET["sortOrder"]);
 }
 
 $sortingKey = array_column($books, $sortBy);
-if ($sortAscOrDesc === "asc") {
+if ($sortOrder === "asc") {
   array_multisort($sortingKey, SORT_ASC, $books);
-} elseif ($sortAscOrDesc === "desc") {
+} elseif ($sortOrder === "desc") {
   array_multisort($sortingKey, SORT_DESC, $books);
 }
 
-// filter books based on search(author and title):
+// Filter books based on search(author and title):
+// Initially $filteredBooks = $books, but if a search is made, $filteredBooks will be updated. 
 $filteredBooks = $books;
 
 if (isset($_GET["filterBy"])) {
@@ -30,7 +31,7 @@ if (isset($_GET["filterBy"])) {
       str_contains(strtolower($var["title"]), $filterBy) ||
       str_contains(strtolower($var["author"]), $filterBy)
     ) {
-      return 1;
+      return 1; // true (keep filtered book in $filteredBooks, otherwise remove it)
     }
   });
 }
@@ -77,9 +78,9 @@ if (isset($_GET["filterBy"])) {
             <option value="year">Release year</option>
             <option value="color">Color of book</option>
           </select>
-          <div class="buttons-asc-desc">
-            <button type="submit" value="asc" name="ascOrDesc">ASC</button>
-            <button type="submit" value="desc" name="ascOrDesc">DESC</button>
+          <div class="buttons-sort-order">
+            <button type="submit" value="asc" name="sortOrder">ASC</button>
+            <button type="submit" value="desc" name="sortOrder">DESC</button>
           </div>
           <!-- </div> -->
         </form>
