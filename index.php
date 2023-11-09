@@ -2,23 +2,43 @@
 
 declare(strict_types=1);
 
+session_start();
+
 require __DIR__ . "/header.php";
-// require __DIR__ . "/data-source.php";
 require __DIR__ . "/data-generated.php";
 
 
 // sort books based on form input:
-if (isset($_GET["sort"], $_GET["sortOrder"])) {
-  $sortBy = htmlspecialchars($_GET["sort"]); // ex. pages or author
-  $sortOrder = htmlspecialchars($_GET["sortOrder"]);
+if (isset($_POST["sortBy"], $_POST["sortOrder"])) {
+  $_SESSION["sortBy"] = htmlspecialchars($_POST["sortBy"]); // ex. pages or author
+  $_SESSION["sortOrder"] = htmlspecialchars($_POST["sortOrder"]); // asc or desc
 }
 
-$sortingKey = array_column($books, $sortBy);
-if ($sortOrder === "asc") {
-  array_multisort($sortingKey, SORT_ASC, $books);
-} elseif ($sortOrder === "desc") {
-  array_multisort($sortingKey, SORT_DESC, $books);
+if (is_numeric($books[0][$_SESSION["sortBy"]])) { // year, pages 
+  if ($_SESSION["sortOrder"] === "asc") {
+    uasort($books, function ($a, $b) {
+      return $a[$_SESSION["sortBy"]] - $b[$_SESSION["sortBy"]];
+    });
+  } elseif ($_SESSION["sortOrder"] === "desc") {
+    uasort($books, function ($a, $b) {
+      return $b[$_SESSION["sortBy"]] - $a[$_SESSION["sortBy"]];
+    });
+  }
+} elseif (!is_numeric($books[0][$_SESSION["sortBy"]])) { // title, author, color
+  if ($_SESSION["sortOrder"] === "asc") {
+    uasort($books, function ($a, $b) {
+      return strnatcmp($a[$_SESSION["sortBy"]], $b[$_SESSION["sortBy"]]);
+    });
+  } elseif ($_SESSION["sortOrder"] === "desc") {
+    uasort($books, function ($a, $b) {
+      return strnatcmp($b[$_SESSION["sortBy"]], $a[$_SESSION["sortBy"]]);
+    });
+  }
 }
+
+// make $sortBy and $sortOrder available in the sort form:
+$sortBy = $_SESSION["sortBy"];
+$sortOrder = $_SESSION["sortOrder"];
 
 // Filter books based on search(author and title):
 // Initially $filteredBooks = $books, but if a search is made, $filteredBooks will be updated. 
@@ -68,24 +88,21 @@ if (isset($_GET["filterBy"])) {
       <!-- select which parameter to sort by alphabetically. ASC or DESC.
       Color currently sorts by hex value... not ideal, might fix later. -->
       <div class="sort">
-        <form action="index.php" method="get">
-          <label for="sort"><strong>Sort by:</strong></label><br>
-          <!-- <div class="flex-container"> -->
-          <select id="sort" name="sort">
-            <option value="title" selected>Title</option>
-            <option value="author">Author</option>
-            <option value="pages">Pages</option>
-            <option value="year">Release year</option>
-            <option value="color">Color of book</option>
+        <form action="index.php" method="post">
+          <label for="sortBy"><strong>Sort by:</strong></label><br>
+          <select id="sortBy" name="sortBy">
+            <option value="title" <?php if ($sortBy == 'title') echo 'selected="true"'; ?>>Title</option>
+            <option value="author" <?php if ($sortBy == 'author') echo 'selected="true"'; ?>>Author</option>
+            <option value="pages" <?php if ($sortBy == 'pages') echo 'selected="true"'; ?>>Pages</option>
+            <option value="year" <?php if ($sortBy == 'year') echo 'selected="true"'; ?>>Release year</option>
+            <option value="color" <?php if ($sortBy == 'color') echo 'selected="true"'; ?>>Color of book</option>
           </select>
           <div class="buttons-sort-order">
-            <button type="submit" value="asc" name="sortOrder">ASC</button>
-            <button type="submit" value="desc" name="sortOrder">DESC</button>
+            <button type="submit" value="asc" name="sortOrder" <?php if ($sortOrder == 'asc') echo 'class="active"'; ?>>ASC</button>
+            <button type="submit" value="desc" name="sortOrder" <?php if ($sortOrder == 'desc') echo 'class="active"'; ?>>DESC</button>
           </div>
-          <!-- </div> -->
         </form>
       </div>
-
 
       <!-- Search and filter by title or author: -->
       <div class="filter">

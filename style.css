@@ -9,6 +9,7 @@
   --bg-color: #e7e7e7;
   --bg-shelves: #a5a5a5;
   --shelves: #303030;
+  --button-active: #36ce75;
 }
 
 * {
@@ -84,6 +85,10 @@ ul {
   font-weight: 600;
   border: 1px solid var(--font-almost-black);
   box-shadow: 2px 2px 0 0 var(--font-almost-black);
+}
+
+button.active {
+  background-color: var(--button-active);
 }
 
 button:hover {
