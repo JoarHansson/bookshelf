@@ -7,14 +7,16 @@ session_start();
 require __DIR__ . "/header.php";
 require __DIR__ . "/data-generated.php";
 
+// SORT LOGIC:
 
-// sort books based on form input:
 if (isset($_POST["sortBy"], $_POST["sortOrder"])) {
   $_SESSION["sortBy"] = htmlspecialchars($_POST["sortBy"]); // ex. pages or author
   $_SESSION["sortOrder"] = htmlspecialchars($_POST["sortOrder"]); // asc or desc
 }
 
-if (is_numeric($books[0][$_SESSION["sortBy"]])) { // year, pages 
+// sort books based on form input:
+if (is_numeric($books[0][$_SESSION["sortBy"]])) {
+  // year, pages: sort numerically
   if ($_SESSION["sortOrder"] === "asc") {
     uasort($books, function ($a, $b) {
       return $a[$_SESSION["sortBy"]] - $b[$_SESSION["sortBy"]];
@@ -24,7 +26,8 @@ if (is_numeric($books[0][$_SESSION["sortBy"]])) { // year, pages
       return $b[$_SESSION["sortBy"]] - $a[$_SESSION["sortBy"]];
     });
   }
-} elseif (!is_numeric($books[0][$_SESSION["sortBy"]])) { // title, author, color
+} elseif (!is_numeric($books[0][$_SESSION["sortBy"]])) {
+  // title, author, color: sort alphabetically
   if ($_SESSION["sortOrder"] === "asc") {
     uasort($books, function ($a, $b) {
       return strnatcmp($a[$_SESSION["sortBy"]], $b[$_SESSION["sortBy"]]);
@@ -36,16 +39,22 @@ if (is_numeric($books[0][$_SESSION["sortBy"]])) { // year, pages
   }
 }
 
-// make $sortBy and $sortOrder available in the sort form:
+// make $sortBy and $sortOrder available in the HTML sort form:
 $sortBy = $_SESSION["sortBy"];
 $sortOrder = $_SESSION["sortOrder"];
 
-// Filter books based on search(author and title):
+// FILTER LOGIC:
+
+if (isset($_POST["filterBy"])) {
+  $_SESSION["filterBy"] = trim(htmlspecialchars(strtolower($_POST["filterBy"])));
+}
+
 // Initially $filteredBooks = $books, but if a search is made, $filteredBooks will be updated. 
 $filteredBooks = $books;
 
-if (isset($_GET["filterBy"])) {
-  $filterBy = trim(htmlspecialchars(strtolower($_GET["filterBy"])));
+// Filter books based on search(author and title):
+if (isset($_SESSION["filterBy"])) {
+  $filterBy = $_SESSION["filterBy"];
   $filteredBooks = array_filter($books, function ($var) use ($filterBy) {
     if (
       str_contains(strtolower($var["title"]), $filterBy) ||
@@ -85,8 +94,7 @@ if (isset($_GET["filterBy"])) {
 
     <div class="sort-and-filter">
 
-      <!-- select which parameter to sort by alphabetically. ASC or DESC.
-      Color currently sorts by hex value... not ideal, might fix later. -->
+      <!-- select which parameter to sort by alphabetically + ASC or DESC. -->
       <div class="sort">
         <form action="index.php" method="post">
           <label for="sortBy"><strong>Sort by:</strong></label><br>
@@ -96,6 +104,7 @@ if (isset($_GET["filterBy"])) {
             <option value="pages" <?php if ($sortBy == 'pages') echo 'selected="true"'; ?>>Pages</option>
             <option value="year" <?php if ($sortBy == 'year') echo 'selected="true"'; ?>>Release year</option>
             <option value="color" <?php if ($sortBy == 'color') echo 'selected="true"'; ?>>Color of book</option>
+            <!-- Color currently sorts by hex value... not ideal, might fix later. -->
           </select>
           <div class="buttons-sort-order">
             <button type="submit" value="asc" name="sortOrder" <?php if ($sortOrder == 'asc') echo 'class="active"'; ?>>ASC</button>
@@ -106,14 +115,19 @@ if (isset($_GET["filterBy"])) {
 
       <!-- Search and filter by title or author: -->
       <div class="filter">
-        <form action="index.php" method="get">
+        <form action="index.php" method="post">
           <label for="filterBy"><strong>Search title or author:</strong></label><br>
-          <input type="text" name="filterBy">
+          <input type="text" name="filterBy" placeholder="<?= $_SESSION["filterBy"] ?>">
           <div class="button-filter"><button type="submit">OK</button></div>
         </form>
       </div>
     </div>
   </section>
+
+  <!-- 
+    TODO: 
+    add a message when a search doesnt match anything
+  -->
 
   <section class="bookshelf">
     <form action="index.php" method="get" class="form-bookshelf">
