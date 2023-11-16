@@ -128,3 +128,15 @@ form.form-bookshelf {
   margin: 0;
   font-weight: 500;
 }
+
+.no-matches {
+  background-color: var(--bg-shelves);
+  border: none;
+  width: 100%;
+  align-items: center;
+  font-family: rubik, sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: var(--font-almost-black);
+  font-style: italic;
+}

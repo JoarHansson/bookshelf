@@ -146,7 +146,12 @@ if (isset($_SESSION["filterBy"])) {
 
           <?php endif; ?>
         <?php endforeach; ?>
-      <?php endforeach ?>
+      <?php endforeach; ?>
+
+      <?php if (empty($filteredBooks)) : ?>
+        <div class="book no-matches">No matches!</div>
+      <?php endif; ?>
+
     </form>
   </section>
 </main>
